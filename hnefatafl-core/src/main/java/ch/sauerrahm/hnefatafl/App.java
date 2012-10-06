@@ -2,7 +2,7 @@ package ch.sauerrahm.hnefatafl;
 
 import java.io.IOException;
 
-import ch.sauerrahm.hnafatafl.ai.AiPlayer;
+import ch.sauerrahm.hnefatafl.ai.AiPlayer;
 import ch.sauerrahm.hnefatafl.boards.NineBoard;
 import ch.sauerrahm.hnefatafl.boards.TestBoard;
 import ch.sauerrahm.hnefatafl.exceptions.VictoryException;

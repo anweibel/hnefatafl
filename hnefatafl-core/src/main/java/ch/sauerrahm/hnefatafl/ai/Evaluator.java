@@ -1,4 +1,4 @@
-package ch.sauerrahm.hnafatafl.ai;
+package ch.sauerrahm.hnefatafl.ai;
 
 import java.util.Set;
 
