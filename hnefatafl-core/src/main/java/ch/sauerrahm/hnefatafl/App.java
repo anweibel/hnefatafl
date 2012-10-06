@@ -2,7 +2,9 @@ package ch.sauerrahm.hnefatafl;
 
 import java.io.IOException;
 
+import ch.sauerrahm.hnafatafl.ai.AiPlayer;
 import ch.sauerrahm.hnefatafl.boards.NineBoard;
+import ch.sauerrahm.hnefatafl.boards.TestBoard;
 import ch.sauerrahm.hnefatafl.exceptions.VictoryException;
 import ch.sauerrahm.hnefatafl.txtgui.CommandLineDrawer;
 import ch.sauerrahm.hnefatafl.txtgui.CommandLinePlayer;
@@ -15,8 +17,8 @@ public class App
 {
     public static void main( String[] args ) throws IOException, NumberFormatException, VictoryException
     {
-    	Board board = new NineBoard();
-    	Player whitePlayer = new CommandLinePlayer(Side.WHITE);
+    	Board board = new TestBoard();
+    	Player whitePlayer = new AiPlayer(Side.WHITE);
     	Player blackPlayer = new CommandLinePlayer(Side.BLACK);
     	
         CommandLineDrawer.drawBoard(board);
@@ -38,7 +40,7 @@ public class App
         		whitePlayer.signalIllegalMove();
         		whiteMove = whitePlayer.getNextMove(board);
         	}
-        	
+        	System.out.println("Moved " + whiteMove);
         	board = Rules.doMove(whiteMove,	board);
         	
         	CommandLineDrawer.drawBoard(board);

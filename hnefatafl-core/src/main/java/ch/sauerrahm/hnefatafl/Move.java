@@ -16,4 +16,8 @@ public class Move {
 	public Field getTo() {
 		return to;
 	}
+	
+	public String toString(){
+		return from.toString() + " => " + to.toString();
+	}
 }

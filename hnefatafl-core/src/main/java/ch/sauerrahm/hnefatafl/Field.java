@@ -1,5 +1,6 @@
 package ch.sauerrahm.hnefatafl;
 
+
 public class Field {
 
 	private Piece piece;
@@ -16,6 +17,14 @@ public class Field {
 		this.YPosition = YPosition;
 		this.isThrone = isThrone;
 		this.isCorner = isCorner;
+	}
+	
+	public Field(Field copy){
+		this.XPosition = copy.XPosition;
+		this.YPosition = copy.YPosition;
+		this.isThrone = copy.isThrone;
+		this.isCorner = copy.isCorner;
+		this.piece = copy.piece;
 	}
 	
 	public boolean isOccupied(){
@@ -83,6 +92,31 @@ public class Field {
 	
 	public void removePiece(){
 		this.piece = null;
+	}
+	
+	public String toString(){
+		return "(" + this.XPosition + "," + this.YPosition + "): [" + this.drawField() + "]";
+	}
+	
+	public String drawField() {
+		
+		if(this.isOccupiedByKing()){
+			return "@";
+		}
+		
+		if(this.isOccupiedByBlack()){
+			return "x";
+		}
+		
+		if(this.isOccupiedByWhite()){
+			return "o";
+		}
+		
+		if(this.isCorner() || this.isThrone()){
+			return "%";
+		}
+
+		return " ";
 	}
 	
 	@Override

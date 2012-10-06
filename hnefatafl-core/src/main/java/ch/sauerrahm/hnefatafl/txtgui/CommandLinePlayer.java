@@ -40,6 +40,8 @@ public class CommandLinePlayer implements Player {
 			throw new RuntimeException(e);
 		} catch (ArrayIndexOutOfBoundsException e){
 			return null;
+		} catch (NumberFormatException e){
+			return null;
 		}
 	}
 
