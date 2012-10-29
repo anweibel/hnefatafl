@@ -1,0 +1,15 @@
+# Application dependencies
+
+require:
+    - play
+    - play -> gae 1.6.0
+    - play -> siena 2.0.6
+    - ch.sauerrahm.hnefatafl -> hnefatafl-core 1.0-SNAPSHOT
+    
+repositories:
+    - MavenLocal:
+        type: iBiblio
+        root: "file:///${user.home}/.m2/repository/"
+        contains:
+            - ch.sauerrahm.hnefatafl -> * 
+     

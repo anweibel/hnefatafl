@@ -1,0 +1,52 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+
+<div id="board"></div>
+
+<script>
+
+function drawField(field){
+   xPos = 40*field.XPosition + 100;
+   yPos = 40*field.YPosition + 100;
+   
+   div = $("<div/>", {class:"field", style: "top:"+xPos+"px; left:"+yPos+"px"});
+   
+   if(field.isCorner){
+   	div.addClass("corner");
+   }
+   if(field.isThrone){
+   	div.addClass("throne");
+   }
+   
+   div.appendTo("#board");
+   
+   if(field.piece != null){
+   	 if(field.piece.side == "BLACK")
+   	   $("<div/>", {class:"piece black", draggable:"true", style: "top:"+xPos+"px; left:"+yPos+"px"}).appendTo("#board");
+   	 else{
+   	   $("<div/>", {class:"piece white", draggable:"true", style: "top:"+xPos+"px; left:"+yPos+"px"}).appendTo("#board");
+   	 }
+   }   
+}
+
+$.ajax({
+  url: "@{Application.getBoard(1)}"
+}).done(function ( data ) {
+  for(var i = 0; i < 9; i++){
+  	for(var j = 0; j < 9; j++){
+  	  console.log(i + "," + j);
+  	  drawField(data.board[i][j]);
+  	}
+  }
+  
+  var dragItems = document.querySelectorAll('[draggable=true]');
+
+for (var i = 0; i < dragItems.length; i++) {
+  addEvent(dragItems[i], 'dragstart', function (event) {
+    // store the ID of the element, and collect it on the drop later on
+
+    event.dataTransfer.setData('Text', this.id);
+  });
+}
+});
+</script>

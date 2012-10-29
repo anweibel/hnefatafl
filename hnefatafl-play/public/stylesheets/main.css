@@ -1,0 +1,35 @@
+#board{
+}
+
+.field{
+	height: 40px;
+	width: 40px;
+	border: 1px solid black;
+	position: absolute;
+}
+
+.corner{
+	background-color: #ddd;
+}
+
+.throne{
+	background-color: #ddd;
+}
+
+.piece{
+	height: 30px;
+	width: 30px;
+	border: 1px solid black;
+	position: absolute;
+	margin-left: 5px;
+	margin-top: 5px;
+}
+
+.white{
+	background-color: white;
+}
+
+.black{
+	background-color: black;
+}
+
