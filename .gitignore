@@ -2,6 +2,12 @@
 *.project
 *.classpath
 */target/*
+*/precompiled/*
+*/tmp/*
+*/eclipse/*
+*/lib/*
+*/modules/*
+*/.settings/*
 
 # Package Files #
 *.jar
