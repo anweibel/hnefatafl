@@ -1,0 +1,15 @@
+cd hnefatafl-core
+
+mvn clean install
+
+cd ..
+
+cd hnefatafl-play
+
+play clean
+
+play deps --clearcache
+
+play ec
+
+cd ..

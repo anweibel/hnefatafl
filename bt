@@ -1,0 +1,15 @@
+cd hnefatafl-core
+
+mvn clean install
+
+cd ..
+
+cd hnefatafl-play
+
+play clean
+
+play deps --clearcache
+
+play gae:deploy --gae=/c/apps/eclipse-indigo-3.7.2/plugins/com.google.appengine.eclipse.sdkbundle_1.7.3/appengine-java-sdk-1.7.3
+
+cd ..
