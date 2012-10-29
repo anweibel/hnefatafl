@@ -2,7 +2,6 @@ package ch.sauerrahm.hnefatafl.boards;
 
 import ch.sauerrahm.hnefatafl.Board;
 import ch.sauerrahm.hnefatafl.Field;
-import ch.sauerrahm.hnefatafl.Piece;
 
 public class CopyBoard extends Board{
 	public CopyBoard(Board otherBoard) {

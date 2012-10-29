@@ -3,6 +3,7 @@ package ch.sauerrahm.hnefatafl.ai;
 import java.util.List;
 
 import ch.sauerrahm.hnefatafl.Board;
+import ch.sauerrahm.hnefatafl.Game;
 import ch.sauerrahm.hnefatafl.Move;
 import ch.sauerrahm.hnefatafl.Player;
 import ch.sauerrahm.hnefatafl.Rules;
@@ -19,12 +20,16 @@ public class AiPlayer implements Player {
 	}
 	
 	@Override
-	public Move getNextMove(Board board) {
+	public void handOver(Game game) {
 		counter = 0;
 		long start = System.currentTimeMillis();
-		ScoredMove bestMove = negamax(board, 3, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY, 1, null);
+		ScoredMove bestMove = negamax(game.getBoard(), 3, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY, 1, null);
 		System.out.println("counter="+counter + " in " + (System.currentTimeMillis() - start));
-		return bestMove.getMove();
+		try {
+			game.doMove(bestMove.getMove(), side);
+		} catch (VictoryException e) {
+			System.out.println("Horray, AI won!");
+		}
 	}
 	
 	/** 
@@ -46,16 +51,20 @@ public class AiPlayer implements Player {
 		
 		for(Move move : moves){
 			try {
+				if(move.getFrom().isOccupiedByKing())
+					continue;
+				
 				Board newBoard = Rules.doMove(move, board);
 				System.out.println(depth + "-" + move);
+				System.out.println(board);
 				ScoredMove negamaxResult = negamax(newBoard, depth-1, -beta, -alpha, -color, move);
 				float val = -negamaxResult.getScore();
 				//if(depth==3) 
 				System.out.println(depth + "- val=" + val + " fuer " + move);
-//				if(val >= beta){
-//					return new ScoredMove(move, val);
-//				}
-				if(val >= alpha){
+				if(val >= beta){
+					return new ScoredMove(move, val);
+				}
+				if(val > alpha){
 					alpha = val;
 					bestMove = move;
 				}
@@ -77,6 +86,11 @@ public class AiPlayer implements Player {
 	@Override
 	public void signalIllegalMove() {
 		throw new RuntimeException("This should not happen!");
+	}
+
+	@Override
+	public boolean isSynchronous() {
+		return true;
 	}
 
 }

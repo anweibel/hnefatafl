@@ -12,13 +12,13 @@ public abstract class Board {
 	protected int size;
 	protected Field[][] board;
 	
-	protected Set<Field> occupiedByWhite = new HashSet<>();
-	protected Set<Field> occupiedByBlack = new HashSet<>();
+	protected Set<Field> occupiedByWhite = new HashSet<Field>();
+	protected Set<Field> occupiedByBlack = new HashSet<Field>();
 	
 	protected Field kingField;
 	
 	public List<Move> getPossibleMoves(Side side){
-		List<Move> possibleMoves = new ArrayList<>();
+		List<Move> possibleMoves = new ArrayList<Move>();
 		Set<Field> occupiedFields = null;
 		
 		switch(side){
@@ -31,7 +31,7 @@ public abstract class Board {
 		}
 		
 		for(Field field : occupiedFields){
-			possibleMoves.addAll(getPossibleMoves(field));
+			possibleMoves.addAll(getPossibleMoves(board[field.getXPosition()][field.getYPosition()]));
 		}
 			
 		return possibleMoves;
@@ -148,12 +148,15 @@ public abstract class Board {
 	}
 	
 	public String toString(){
+		
+		String lineSeparator = System.getProperty("line.separator");
+		
 		String bar = "   +";
 		
 		for(int i = 0; i < size - 1; i++)
 			bar += "--";
 		
-		bar += "-+" + System.lineSeparator();
+		bar += "-+" + lineSeparator;
 		
 		String playingField = "" + bar;
 		
@@ -170,11 +173,11 @@ public abstract class Board {
 			for(int x = 0; x < size; x++){
 				line += board[x][y].drawField() + "|";
 			}
-			playingField += line + System.lineSeparator();
+			playingField += line + lineSeparator;
 		}
 		
 		playingField += bar;
-		playingField += "    0 1 2 3 4 5 6 7 8" + System.lineSeparator();
+		playingField += "    0 1 2 3 4 5 6 7 8" + lineSeparator;
 		
 		return playingField;
 	}
