@@ -5,11 +5,39 @@
 
 <script>
 
+var board = {};
+var pieces = {};
+var piececounter = 0;
+
+function allowDrop(ev)
+{
+ev.preventDefault();
+}
+
+function drag(ev)
+{
+ev.dataTransfer.setData("from",ev.target.parentElement.id);
+ev.dataTransfer.setData("piece",ev.target.id);
+}
+
+function drop(ev)
+{
+ev.preventDefault();
+from=ev.dataTransfer.getData("from");
+piece=ev.dataTransfer.getData("piece");
+pieces[piece].appendTo(ev.target);
+}
+
 function drawField(field){
    xPos = 40*field.XPosition + 100;
    yPos = 40*field.YPosition + 100;
    
-   div = $("<div/>", {class:"field", style: "top:"+xPos+"px; left:"+yPos+"px"});
+   fieldId = "field" + field.XPosition + "x" + field.YPosition;
+   
+   div = $("<div/>", {class:"field", id: fieldId, style: "top:"+xPos+"px; left:"+yPos+"px",
+     ondrop:"drop(event)", ondragover:"allowDrop(event)"});
+   
+   board[fieldId] = div;
    
    if(field.isCorner){
    	div.addClass("corner");
@@ -21,11 +49,18 @@ function drawField(field){
    div.appendTo("#board");
    
    if(field.piece != null){
+     piececounter++;
+     pieceId = "piece" + piececounter;
+     var piece;
+     
    	 if(field.piece.side == "BLACK")
-   	   $("<div/>", {class:"piece black", draggable:"true", style: "top:"+xPos+"px; left:"+yPos+"px"}).appendTo("#board");
+   	   piece = $("<div/>", {class:"piece black", id: pieceId, draggable:"true", ondragstart:"drag(event)"});
    	 else{
-   	   $("<div/>", {class:"piece white", draggable:"true", style: "top:"+xPos+"px; left:"+yPos+"px"}).appendTo("#board");
+   	   piece = $("<div/>", {class:"piece white", id: pieceId, draggable:"true", ondragstart:"drag(event)"});
    	 }
+   	 
+   	 pieces[pieceId] = piece;
+   	 piece.appendTo(div);
    }   
 }
 
@@ -38,15 +73,6 @@ $.ajax({
   	  drawField(data.board[i][j]);
   	}
   }
-  
-  var dragItems = document.querySelectorAll('[draggable=true]');
-
-for (var i = 0; i < dragItems.length; i++) {
-  addEvent(dragItems[i], 'dragstart', function (event) {
-    // store the ID of the element, and collect it on the drop later on
-
-    event.dataTransfer.setData('Text', this.id);
-  });
-}
 });
+
 </script>
