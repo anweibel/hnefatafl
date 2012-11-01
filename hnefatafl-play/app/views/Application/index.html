@@ -26,6 +26,23 @@ ev.preventDefault();
 from=ev.dataTransfer.getData("from");
 piece=ev.dataTransfer.getData("piece");
 pieces[piece].appendTo(ev.target);
+
+var fromX = from.match(/\d+/);
+var fromY = from.match(/\d+$/);
+var toX = ev.target.id.match(/\d+/);
+var toY = ev.target.id.match(/\d+$/);
+var updateUserRoute = #{jsRoute @Application.doMove(':gameId', ':fromX', ':fromY', ':toX', ':toY') /}
+
+$.ajax({
+  url: updateUserRoute.url({gameId: '1', fromX: fromX, fromY: fromY, toX: toX, toY: toY })
+}).done(function ( data ) {
+  for(var i = 0; i < 9; i++){
+  	for(var j = 0; j < 9; j++){
+  	  console.log(i + "," + j);
+  	  drawField(data.board[i][j]);
+  	}
+  }
+});
 }
 
 function drawField(field){
