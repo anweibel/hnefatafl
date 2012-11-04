@@ -9,6 +9,7 @@ import ch.sauerrahm.hnefatafl.Game;
 import ch.sauerrahm.hnefatafl.Move;
 import ch.sauerrahm.hnefatafl.Player;
 import ch.sauerrahm.hnefatafl.Side;
+import ch.sauerrahm.hnefatafl.exceptions.IllegalMoveException;
 import ch.sauerrahm.hnefatafl.exceptions.VictoryException;
 
 public class CommandLinePlayer implements Player {
@@ -55,6 +56,9 @@ public class CommandLinePlayer implements Player {
 			} catch (VictoryException e) {
 				System.out.println("Congratulations, you won!");
 				validMove = true;
+			} catch (IllegalMoveException e) {
+				System.out.println("This move is not possible.");
+				handOver(game);
 			}
 		}
 	}
@@ -64,10 +68,4 @@ public class CommandLinePlayer implements Player {
 		System.out.println("This move is not legal. Try again!");
 
 	}
-
-	@Override
-	public boolean isSynchronous() {
-		return true;
-	}
-
 }

@@ -6,6 +6,7 @@ import ch.sauerrahm.hnefatafl.Field;
 import ch.sauerrahm.hnefatafl.Game;
 import ch.sauerrahm.hnefatafl.Move;
 import ch.sauerrahm.hnefatafl.Side;
+import ch.sauerrahm.hnefatafl.exceptions.IllegalMoveException;
 import ch.sauerrahm.hnefatafl.exceptions.VictoryException;
 
 public class Application extends Controller {
@@ -24,12 +25,17 @@ public class Application extends Controller {
     
     public static void doMove(long gameId, int fromX, int fromY, int toX, int toY){
     	Field[][] fields = game.getBoard().getBoard();
+    	String message = "";
     	try {
 			game.doMove(new Move(fields[fromX][fromY], fields[toX][toY]), Side.BLACK);
 		} catch (VictoryException e) {
-			// TODO Auto-generated catch block
+			message = e.getSide() + " won!";
+		} catch (IllegalMoveException e) {
+			message = "This move is not possible";
 		}
     	Board board = game.getBoard();
+    	board.setMessage(message);
+    	
     	renderJSON(board);
     }
 }

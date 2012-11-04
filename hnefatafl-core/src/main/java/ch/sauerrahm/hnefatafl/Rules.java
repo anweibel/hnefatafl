@@ -1,10 +1,9 @@
 package ch.sauerrahm.hnefatafl;
 
 import ch.sauerrahm.hnefatafl.boards.CopyBoard;
-import ch.sauerrahm.hnefatafl.exceptions.VictoryException;
 
 public class Rules {
-	public static Board doMove(Move move, Board currentBoard) throws VictoryException{
+	public static Board doMove(Move move, Board currentBoard){
 		
 		CopyBoard copiedBoard = new CopyBoard(currentBoard);
 		
@@ -19,7 +18,7 @@ public class Rules {
 		return copiedBoard;
 	}
 
-	private static void checkForCapturedPieces(Piece movingPiece, int toX, int toY, CopyBoard copiedBoard) throws VictoryException {
+	private static void checkForCapturedPieces(Piece movingPiece, int toX, int toY, CopyBoard copiedBoard){
 		
 		Field[][] fields = copiedBoard.getBoard();
 		Side side = movingPiece.getSide();
@@ -38,7 +37,7 @@ public class Rules {
 		}
 	}
 	
-	private static boolean checkDirectionForCapture(Field directNeighour, Field nextNeighbour, Side side) throws VictoryException{
+	private static boolean checkDirectionForCapture(Field directNeighour, Field nextNeighbour, Side side){
 		if(!directNeighour.isOccupiedByOpponent(side)){
 			return false;
 		}
@@ -60,13 +59,13 @@ public class Rules {
 			
 	}
 
-	private static void checkForVictory(CopyBoard copiedBoard) throws VictoryException {
+	private static void checkForVictory(CopyBoard copiedBoard){
 		
 		Field[][] fields = copiedBoard.getBoard();
 		
 		if(fields[0][0].isOccupiedByKing() || fields[0][fields.length-1].isOccupiedByKing()
-	        || fields[fields.length-1][0].isOccupiedByKing() || fields[fields.length-1][fields.length-1].isOccupiedByKing())
-			throw new VictoryException(Side.WHITE);
+				|| fields[fields.length-1][0].isOccupiedByKing() || fields[fields.length-1][fields.length-1].isOccupiedByKing())
+			copiedBoard.winner = Side.WHITE;
 		
 		int kingX = copiedBoard.getKingField().getXPosition();
 		int kingY = copiedBoard.getKingField().getYPosition();
@@ -76,10 +75,14 @@ public class Rules {
 		if (kingY >= 1 && !(fields[kingX][kingY-1].isOccupiedByBlack() || fields[kingX][kingY-1].isThrone())) return;
 		if (kingY < copiedBoard.size-1 && !(fields[kingX][kingY+1].isOccupiedByBlack() || fields[kingX][kingY+1].isThrone())) return;
 		// else
-		throw new VictoryException(Side.BLACK);
+		copiedBoard.winner = Side.BLACK;
 	}
 	
 	public static boolean isMoveLegal(Board board, Move move, Side side){
+		
+		if(board.getWinner() != null)
+			return false;
+		
 		int fromX = move.getFrom().getXPosition();
 		int fromY = move.getFrom().getYPosition();
 		int toX = move.getTo().getXPosition();

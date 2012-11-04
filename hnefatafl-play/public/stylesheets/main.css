@@ -32,3 +32,15 @@
 	background-color: black;
 }
 
+.king{
+	height: 24px;
+	width: 24px;
+	border: 4px double black;
+}
+
+#message{
+	margin-left: 40px;
+	background-color: black;
+	color: white;
+}
+

@@ -17,6 +17,9 @@ public abstract class Board {
 	
 	protected Field kingField;
 	
+	protected String message;
+	protected Side winner = null;
+	
 	public List<Move> getPossibleMoves(Side side){
 		List<Move> possibleMoves = new ArrayList<Move>();
 		Set<Field> occupiedFields = null;
@@ -147,6 +150,22 @@ public abstract class Board {
 		board[to.getXPosition()][to.getYPosition()].setPiece(movingPiece);
 	}
 	
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public Side getWinner() {
+		return winner;
+	}
+
+	public void setWinner(Side winner) {
+		this.winner = winner;
+	}
+
 	public String toString(){
 		
 		String lineSeparator = System.getProperty("line.separator");
