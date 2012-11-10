@@ -91,4 +91,9 @@ public class AiPlayer implements Player {
 	public void signalIllegalMove() {
 		throw new RuntimeException("This should not happen!");
 	}
+
+	@Override
+	public Side getSide() {
+		return side;
+	}
 }

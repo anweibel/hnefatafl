@@ -4,7 +4,8 @@
 
 # Home page
 GET     /                                       Application.index
-GET     /{gameId}/board                         Application.getBoard
+GET     /{gameId}/board/                        Application.board
+GET     /{gameId}/boardJson/                    Application.boardJson
 GET     /{gameId}/move/{fromX}/{fromY}/{toX}/{toY}   Application.doMove
 
 # Ignore favicon requests

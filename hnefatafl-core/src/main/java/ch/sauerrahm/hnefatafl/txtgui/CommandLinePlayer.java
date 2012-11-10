@@ -68,4 +68,9 @@ public class CommandLinePlayer implements Player {
 		System.out.println("This move is not legal. Try again!");
 
 	}
+
+	@Override
+	public Side getSide() {
+		return side;
+	}
 }

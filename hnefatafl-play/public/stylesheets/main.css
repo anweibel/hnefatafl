@@ -6,36 +6,36 @@
 	width: 40px;
 	border: 1px solid black;
 	position: absolute;
+	background-image: url(/public/images/field.png)
 }
 
 .corner{
+	background-image: url(/public/images/edge.png);
 	background-color: #ddd;
 }
 
 .throne{
+	background-image: url(/public/images/edge.png);
 	background-color: #ddd;
 }
 
 .piece{
 	height: 30px;
 	width: 30px;
-	border: 1px solid black;
 	margin-left: 4px;
 	margin-top: 4px;
 }
 
 .white{
-	background-color: white;
+	background-image: url(/public/images/white.png);
 }
 
 .black{
-	background-color: black;
+	background-image: url(/public/images/black.png);
 }
 
 .king{
-	height: 24px;
-	width: 24px;
-	border: 4px double black;
+	background-image: url(/public/images/king.png);
 }
 
 #message{
@@ -44,3 +44,23 @@
 	color: white;
 }
 
+.jumbotron{
+	text-align: center;
+}
+
+.jumbotron h1 {
+	font-weight: bold;
+	font-size: 120px;	
+	margin-bottom: 50px;
+	margin-top: 200px;
+}
+
+.jumbotron p {
+	font-weight: bold;
+	font-size: 40px;	
+	margin-bottom: 50px;
+}
+
+.jumbotron .container {
+	position: relative;
+}

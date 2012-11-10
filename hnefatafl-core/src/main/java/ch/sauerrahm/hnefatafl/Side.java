@@ -10,4 +10,11 @@ public enum Side {
 		else
 			return BLACK;
 	} 
+	
+	public static Side fromString(String string){
+		if(string.equalsIgnoreCase("white"))
+			return WHITE;
+		else
+			return BLACK;
+	}
 }
