@@ -22,8 +22,8 @@
 .piece{
 	height: 30px;
 	width: 30px;
-	margin-left: 4px;
-	margin-top: 4px;
+	margin-left: 5px;
+	margin-top: 5px;
 }
 
 .white{
@@ -45,6 +45,7 @@
 }
 
 .jumbotron{
+	margin-top: 200px;
 	text-align: center;
 }
 
@@ -52,7 +53,6 @@
 	font-weight: bold;
 	font-size: 120px;	
 	margin-bottom: 50px;
-	margin-top: 200px;
 }
 
 .jumbotron p {

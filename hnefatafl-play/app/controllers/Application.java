@@ -42,7 +42,7 @@ public class Application extends Controller {
 		} catch (IllegalMoveException e) {
 			message = "This move is not possible";
 		}
-    	game.getBoard().setMessage(message);
+    	game.getCurrentState().setMessage(message);
     	
     	renderJSON(game);
     }

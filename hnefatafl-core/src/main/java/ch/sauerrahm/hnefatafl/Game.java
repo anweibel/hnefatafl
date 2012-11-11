@@ -12,11 +12,11 @@ import ch.sauerrahm.hnefatafl.online.OnlinePlayer;
 public class Game 
 {
 	
-	private Board board = new NineBoard();
 	private Player player1;
 	private Player player2;
 	private List<Move> moveHistory = new ArrayList<Move>(); 
 	private Date lastAction = new Date();
+	private Result currentState = new Result(new NineBoard(), null, null);
 	
 	public Game(Player player1, Player player2){
 		this.player1 = player1;
@@ -26,20 +26,23 @@ public class Game
 			player1.handOver(this);
 		else
 			player2.handOver(this);
+		
+		
 	}
     
-    public void doMove(Move move, Side side) throws VictoryException, IllegalMoveException{
-    	if(!Rules.isMoveLegal(board, move, side)){
+    public void doMove(Move move, Side side) throws IllegalMoveException, VictoryException{
+    	if(!Rules.isMoveLegal(currentState.getBoard(), move, side)){
     		throw new IllegalMoveException();
     	}
     	
-    	board = Rules.doMove(move, board);
+    	currentState = Rules.doMove(move, currentState.getBoard());
     	
     	moveHistory.add(move);
     	lastAction = new Date();
     	
-    	if(board.getWinner() != null)
-    		throw new VictoryException(board.getWinner());
+    	if(currentState.getWinner() != null){
+    		throw new VictoryException(currentState.getWinner());
+    	}
     	
     	getNextPlayer(side).handOver(this);    	
     }
@@ -52,7 +55,11 @@ public class Game
 	}
 
 	public Board getBoard(){
-    	return board;
+    	return currentState.getBoard();
+    }
+	
+	public Result getCurrentState(){
+    	return currentState;
     }
 	
 	public Date getLastAction(){

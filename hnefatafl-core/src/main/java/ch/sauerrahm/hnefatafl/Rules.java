@@ -1,9 +1,12 @@
 package ch.sauerrahm.hnefatafl;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import ch.sauerrahm.hnefatafl.boards.CopyBoard;
 
 public class Rules {
-	public static Board doMove(Move move, Board currentBoard){
+	public static Result doMove(Move move, Board currentBoard){
 		
 		CopyBoard copiedBoard = new CopyBoard(currentBoard);
 		
@@ -12,29 +15,36 @@ public class Rules {
 		copiedBoard.removePiece(move.getFrom());
 		copiedBoard.setPiece(move.getTo(), movingPiece);
 		
-		checkForCapturedPieces(movingPiece, move.getTo().getXPosition(), move.getTo().getYPosition(), copiedBoard);		
-		checkForVictory(copiedBoard);
+		Set<Field> deletedPieces = checkForCapturedPieces(movingPiece, move.getTo().getXPosition(), move.getTo().getYPosition(), copiedBoard);		
+		Side winner = checkForVictory(copiedBoard);
 		
-		return copiedBoard;
+		return new Result(copiedBoard, deletedPieces, winner);
 	}
 
-	private static void checkForCapturedPieces(Piece movingPiece, int toX, int toY, CopyBoard copiedBoard){
+	private static Set<Field> checkForCapturedPieces(Piece movingPiece, int toX, int toY, CopyBoard copiedBoard){
 		
 		Field[][] fields = copiedBoard.getBoard();
 		Side side = movingPiece.getSide();
+		Set<Field> deletedPieces = new HashSet<Field>();
 		
 		if(toX >=2 && checkDirectionForCapture(fields[toX-1][toY], fields[toX-2][toY], side)){
 			copiedBoard.removePiece(fields[toX-1][toY]);
+			deletedPieces.add(fields[toX-1][toY]);
 		}
 		if(toX <= copiedBoard.size - 3 && checkDirectionForCapture(fields[toX+1][toY], fields[toX+2][toY], side)){
 			copiedBoard.removePiece(fields[toX+1][toY]);
+			deletedPieces.add(fields[toX+1][toY]);
 		}
 		if(toY >=2 && checkDirectionForCapture(fields[toX][toY-1], fields[toX][toY-2], side)){
 			copiedBoard.removePiece(fields[toX][toY-1]);
+			deletedPieces.add(fields[toX][toY-1]);
 		}
 		if(toY <= copiedBoard.size - 3 && checkDirectionForCapture(fields[toX][toY+1], fields[toX][toY+2], side)){
 			copiedBoard.removePiece(fields[toX][toY+1]);
+			deletedPieces.add(fields[toX][toY+1]);
 		}
+		
+		return deletedPieces;
 	}
 	
 	private static boolean checkDirectionForCapture(Field directNeighour, Field nextNeighbour, Side side){
@@ -59,30 +69,27 @@ public class Rules {
 			
 	}
 
-	private static void checkForVictory(CopyBoard copiedBoard){
+	private static Side checkForVictory(CopyBoard copiedBoard){
 		
 		Field[][] fields = copiedBoard.getBoard();
 		
 		if(fields[0][0].isOccupiedByKing() || fields[0][fields.length-1].isOccupiedByKing()
 				|| fields[fields.length-1][0].isOccupiedByKing() || fields[fields.length-1][fields.length-1].isOccupiedByKing())
-			copiedBoard.winner = Side.WHITE;
+			return Side.WHITE;
 		
 		int kingX = copiedBoard.getKingField().getXPosition();
 		int kingY = copiedBoard.getKingField().getYPosition();
 		
-		if (kingX >= 1 && !(fields[kingX-1][kingY].isOccupiedByBlack() || fields[kingX-1][kingY].isThrone())) return;
-		if (kingX < copiedBoard.size-1 && !(fields[kingX+1][kingY].isOccupiedByBlack() || fields[kingX+1][kingY].isThrone())) return;
-		if (kingY >= 1 && !(fields[kingX][kingY-1].isOccupiedByBlack() || fields[kingX][kingY-1].isThrone())) return;
-		if (kingY < copiedBoard.size-1 && !(fields[kingX][kingY+1].isOccupiedByBlack() || fields[kingX][kingY+1].isThrone())) return;
+		if (kingX >= 1 && !(fields[kingX-1][kingY].isOccupiedByBlack() || fields[kingX-1][kingY].isThrone())) return null;
+		if (kingX < copiedBoard.size-1 && !(fields[kingX+1][kingY].isOccupiedByBlack() || fields[kingX+1][kingY].isThrone())) return null;
+		if (kingY >= 1 && !(fields[kingX][kingY-1].isOccupiedByBlack() || fields[kingX][kingY-1].isThrone())) return null;
+		if (kingY < copiedBoard.size-1 && !(fields[kingX][kingY+1].isOccupiedByBlack() || fields[kingX][kingY+1].isThrone())) return null;
 		// else
-		copiedBoard.winner = Side.BLACK;
+		return Side.BLACK;
 	}
 	
 	public static boolean isMoveLegal(Board board, Move move, Side side){
-		
-		if(board.getWinner() != null)
-			return false;
-		
+				
 		int fromX = move.getFrom().getXPosition();
 		int fromY = move.getFrom().getYPosition();
 		int toX = move.getTo().getXPosition();

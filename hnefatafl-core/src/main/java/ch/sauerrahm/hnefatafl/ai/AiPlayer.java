@@ -6,6 +6,7 @@ import ch.sauerrahm.hnefatafl.Board;
 import ch.sauerrahm.hnefatafl.Game;
 import ch.sauerrahm.hnefatafl.Move;
 import ch.sauerrahm.hnefatafl.Player;
+import ch.sauerrahm.hnefatafl.Result;
 import ch.sauerrahm.hnefatafl.Rules;
 import ch.sauerrahm.hnefatafl.Side;
 import ch.sauerrahm.hnefatafl.exceptions.IllegalMoveException;
@@ -61,8 +62,8 @@ public class AiPlayer implements Player {
 			if (move.getFrom().isOccupiedByKing())
 				continue;
 
-			Board newBoard = Rules.doMove(move, board);
-			ScoredMove negamaxResult = negamax(newBoard, depth - 1, -beta,
+			Result newState = Rules.doMove(move, board);
+			ScoredMove negamaxResult = negamax(newState.getBoard(), depth - 1, -beta,
 					-alpha, -color, move);
 			float val = -negamaxResult.getScore();
 			if (val >= beta) {
@@ -73,8 +74,8 @@ public class AiPlayer implements Player {
 				bestMove = move;
 			}
 
-			if (newBoard.getWinner() != null)
-				if (newBoard.getWinner().equals(side))
+			if (newState.getWinner() != null)
+				if (newState.getWinner().equals(side))
 					return new ScoredMove(move, Float.POSITIVE_INFINITY);
 				else
 					return new ScoredMove(move, Float.NEGATIVE_INFINITY);

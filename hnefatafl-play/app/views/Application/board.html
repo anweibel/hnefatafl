@@ -1,14 +1,19 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 
-<div id="board"></div>
-<div id="message"></div>
+<div class="jumbotron masthead">
+	<div class="container">	
+		<div id="board"></div>
+		<div id="message"></div>
+	</div>
+</div>
 
 <script>
 
 var board = {};
 var pieces = {};
 var piececounter = 0;
+var roundcounter = 0;
 
 function allowDrop(ev){
   ev.preventDefault();
@@ -17,6 +22,51 @@ function allowDrop(ev){
 function drag(ev){
   ev.dataTransfer.setData("from",ev.target.parentElement.id);
   ev.dataTransfer.setData("piece",ev.target.id);
+}
+
+function getFieldId(field){
+  return "field" + field.XPosition + "x" + field.YPosition;
+}
+
+function redraw(data){
+  if(data.moveHistory.length == roundcounter){
+	return;
+  }
+  
+  $(".piece").remove();
+  $("#message").html(data.message);
+  
+  for(var i = 0; i < 9; i++){
+   for(var j = 0; j < 9; j++){
+     drawField(data.currentState.board.board[i][j]);
+   }
+  }
+  
+  roundcounter = data.moveHistory.length;
+  lastMove = data.moveHistory[data.moveHistory.length-1];
+  toField = board[getFieldId(lastMove.to)];
+  fromField = board[getFieldId(lastMove.from)];
+  piece = toField.children();
+  topPos = fromField.position().top - toField.position().top + 5;
+  leftPos = fromField.position().left - toField.position().left + 5;
+  piece.css("margin-top", topPos);
+  piece.css("margin-left", leftPos);
+  toField.css("z-index", 100);
+  piece.animate(
+    {"margin-top": "5px", "margin-left": "5px"},
+    3000,
+    function(){
+      toField.css("z-index", 0);
+    }
+  );  
+}
+
+function refresh(){
+$.ajax({
+  url: "@{Application.boardJson(gameId)}"
+}).done(function ( data ) {
+  redraw(data);
+});
 }
 
 function drop(ev){
@@ -40,26 +90,20 @@ function drop(ev){
 
   pieces[piece].appendTo(ev.target);
   
-  var updateUserRoute = #{jsRoute @Application.doMove(':gameId', ':fromX', ':fromY', ':toX', ':toY') /}
+  var doMoveRoute = #{jsRoute @Application.doMove(':gameId', ':fromX', ':fromY', ':toX', ':toY') /}
 
   $.ajax({
-    url: updateUserRoute.url({gameId: ${gameId}, fromX: fromX, fromY: fromY, toX: toX, toY: toY })
+    url: doMoveRoute.url({gameId: ${gameId}, fromX: fromX, fromY: fromY, toX: toX, toY: toY })
   }).done(function ( data ) {
-    $(".piece").remove();
-    $("#message").html(data.message);
-    for(var i = 0; i < 9; i++){
-  	  for(var j = 0; j < 9; j++){
-  	    drawField(data.board.board[i][j]);
-  	  }
-    }
+  	redraw(data);
   });
 }
 
 function drawField(field){
-  xPos = 41*field.XPosition + 100;
-  yPos = 41*field.YPosition + 100;
+  xPos = 41*field.XPosition;
+  yPos = 41*field.YPosition	;
 
-  fieldId = "field" + field.XPosition + "x" + field.YPosition;
+  fieldId = getFieldId(field);
    
   div = $("<div/>", {class:"field", id: fieldId, style: "top:"+xPos+"px; left:"+yPos+"px",
     ondrop:"drop(event)", ondragover:"allowDrop(event)"});
@@ -95,14 +139,7 @@ function drawField(field){
   }   
 }
 
-$.ajax({
-  url: "@{Application.boardJson(gameId)}"
-}).done(function ( data ) {
-  for(var i = 0; i < 9; i++){
-  	for(var j = 0; j < 9; j++){
-  	  drawField(data.board.board[i][j]);
-  	}
-  }
-});
+refresh();
+window.setInterval(refresh, 3000);
 
 </script>
