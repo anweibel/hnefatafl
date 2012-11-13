@@ -29,7 +29,7 @@ function getFieldId(field){
 }
 
 function redraw(data){
-  if(data.moveHistory.length == roundcounter){
+  if(data.moveHistory.length == roundcounter && roundcounter != 0){
 	return;
   }
   
@@ -52,11 +52,27 @@ function redraw(data){
   piece.css("margin-top", topPos);
   piece.css("margin-left", leftPos);
   toField.css("z-index", 100);
+  deletePiecesFields = data.currentState.deletedPieces;
+  deletePiecesDivs = [];
+  $.each(deletePiecesFields, function(key, piece){
+    if(lastMove.from.piece.side == "WHITE"){
+      side = "black";
+    } else {
+      side = "white";
+    }
+    
+    deletedPiece = $("<div/>", {class:"piece " + side});
+    deletePiecesDivs.push(deletedPiece);
+  	deletedPiece.appendTo(board[getFieldId(piece)]);
+  });
   piece.animate(
     {"margin-top": "5px", "margin-left": "5px"},
     3000,
     function(){
       toField.css("z-index", 0);
+      $.each(deletePiecesDivs, function(key, piece){
+      	piece.remove();
+      });
     }
   );  
 }
