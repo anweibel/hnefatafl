@@ -22,6 +22,10 @@ public class Application extends Controller {
         render();
     }
     
+    public static void rules() {
+        render();
+    }
+    
     public static void board(Long gameId) {
         render(gameId);
     }

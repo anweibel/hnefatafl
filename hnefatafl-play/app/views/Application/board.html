@@ -1,10 +1,10 @@
 #{extends 'main.html' /}
-#{set title:'Home' /}
+#{set title:'Hnefatafl - Viking Board Game' /}
 
 <div class="jumbotron masthead">
 	<div class="container">	
 		<div id="board"></div>
-		<div id="message"></div>
+		<div id="message" class="alert alert-info"></div>
 	</div>
 </div>
 
@@ -34,7 +34,6 @@ function redraw(data){
   }
   
   $(".piece").remove();
-  $("#message").html(data.message);
   
   for(var i = 0; i < 9; i++){
    for(var j = 0; j < 9; j++){
@@ -82,6 +81,12 @@ $.ajax({
   url: "@{Application.boardJson(gameId)}"
 }).done(function ( data ) {
   redraw(data);
+  if(data.currentState.message != null && data.currentState.message.length > 0){
+  	$("#message").html(data.currentState.message);
+  	$("#message").show();
+  } else {
+  	$("#message").hide();
+  }
 });
 }
 
